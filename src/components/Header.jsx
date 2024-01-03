@@ -1,8 +1,14 @@
 import Button from 'react-bootstrap/Button';
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Badge from 'react-bootstrap/Badge';
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 function Header() {
+  const [wishlistCount,setWishlistCount]=useState(0)
+  const wishlist=useSelector(state=>state.wishlistSlice.wishlist)
+  useEffect(()=>{
+    setWishlistCount(wishlist.length)
+  },[wishlist])
   return (
     <div style={{background:'blueviolet'}}>
     <div style={{height:'70px'}} className='w-100 text-white  d-flex  justify-content-between px-5 py-3'>
@@ -13,7 +19,7 @@ function Header() {
         <div className='d-flex me-5 text-white'>
         <Link to={'/wishlist'}>
         <Button className='me-4 fw-bold ' variant="outline-light"><i class="fa-solid fa-heart text-danger "></i>&nbsp;WishList
-        &nbsp;<Badge bg="white" className='text-black'>9</Badge>
+        &nbsp;<Badge bg="white" className='text-black'>{wishlistCount}</Badge>
         </Button>
         </Link>
 
