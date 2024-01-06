@@ -4,13 +4,25 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { fetchProducts } from '../Redux/Slice/productSlice'
 import { addToWishList } from '../Redux/Slice/wishlistSlice'
+import { addtoCart } from '../Redux/Slice/cartSlice'
 
 function Home() {
   const dispatch=useDispatch()
   const {loading,products,error}=useSelector((state)=>state.productSlice)
+  const {wishlist}=useSelector(state=>state.wishlistSlice)
   useEffect(()=>{
     dispatch(fetchProducts())
   },[])
+  const handleWishlist=(product)=>{
+    const existingProduct=wishlist.find(item=>item.id==product.id)
+    if(existingProduct){
+      alert("Product already exist!!!")
+    }
+    else{
+      dispatch(addToWishList(product))
+    }
+  }
+
   return (
     <div >
       {
@@ -25,8 +37,8 @@ function Home() {
         <Card.Body>
           <Card.Title className='text-black'>{product.title.slice(0,20)}...</Card.Title>
           <div className="d-flex justify-content-between">
-            <Button onClick={()=>dispatch(addToWishList(product))} className='btn bg-white border-0   fs-5'><i class="fa-solid fa-heart text-danger "></i></Button>
-            <Button className='btn bg-white border-0   fs-5'><i class="fa-solid fa-cart-plus text-success "></i></Button>
+            <Button onClick={()=>handleWishlist(product)} className='btn bg-white border-0   fs-5'><i class="fa-solid fa-heart text-danger "></i></Button>
+            <Button onClick={()=>dispatch(addtoCart(product))} className='btn bg-white border-0   fs-5'><i class="fa-solid fa-cart-plus text-success "></i></Button>
           </div>
         </Card.Body>
       </Card>

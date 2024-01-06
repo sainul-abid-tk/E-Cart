@@ -1,10 +1,32 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Table } from 'react-bootstrap'
+import { useDispatch, useSelector } from 'react-redux'
+import { Link, useNavigate } from 'react-router-dom'
+import { emptyCart, removeCart } from '../Redux/Slice/cartSlice'
 
 function Cart() {
+    const dispatch=useDispatch()
+    const navigate=useNavigate()
+    const cart=useSelector(state=>state.cartReducer)
+    const [cartTotalAmount,setCartTotalAmount]=useState()
+    useEffect(()=>{
+        if(cart?.length>0){
+            setCartTotalAmount(cart.map(product=>product.totalPrice).reduce((p1,p2)=>p1+p2))
+        }
+        else{
+            setCartTotalAmount(0)
+        }
+    },[cart])
+
+    const handleCheckout=()=>{
+        alert("Your order has successfully placed....Thank you for purchasing with us!")
+        dispatch(emptyCart())
+        navigate('/')
+    }
+
   return (
-    <div className='container mt-5'>
-        <div className="row mt-5">
+    <div >
+        {cart?.length>0?<div className="row m-5">
             <div className="col-lg-8">
                 <h3 className='mt-5'>Cart Summery</h3>
                 <Table variant="light" className='text-white shadow mt-3 '>
@@ -13,32 +35,46 @@ function Cart() {
                             <th>#</th>
                             <th>Product</th>
                             <th>Image</th>
+                            <th>Quantity</th>
                             <th>Price</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <th>1</th>
-                            <th>Samsung S24</th>
-                            <th><img style={{height:'100px',width:'100px'}} src="https://alkhalej-services.net/user_images/news/15-09-23-114871749.jpg" alt="" /></th>
-                            <th>$ 560</th>
-                            <th><button className='btn'><i className='fa-solid fa-trash text-danger'></i></button></th>
+                        {cart.map((product,index)=>(
+                            <tr>
+                            <th>{index+1}</th>
+                            <th>{product.title}</th>
+                            <th><img style={{height:'100px',width:'100px'}} src={product.thumbnail} alt="" /></th>
+                            <th><input style={{width:'40px'}} type="text" className='form-control bg-white' value={product.quantity} readOnly /></th>
+                            <th>$ {product.totalPrice}</th>
+                            <th><button onClick={()=>dispatch(removeCart(product.id))} className='btn'><i className='fa-solid fa-trash text-danger'></i></button></th>
                         </tr>
+                        ))}
                     </tbody>
                 </Table>
+                <div className='float-end'>
+                    <button onClick={()=>dispatch(emptyCart())} className='btn btn-danger me-3'>Empty Cart</button>
+                    <Link to={'/'} className='btn btn-primary '>Shop More</Link>
+                </div>
             </div>
             <div className="col-lg-4 mt-5">
                 <div className='d-flex flex-column border rounded p-4'>
-                <h5>Total Product: <span className='fw-bolder'>3</span></h5>
-                <h3>Total Amount: <span className='fw-bolder'>$ 560</span></h3>
+                <h5>Total Product: <span className='fw-bolder'>{cart?.length}</span></h5>
+                <h3>Total Amount: <span className='fw-bolder'>$ {cartTotalAmount}</span></h3>
                 <hr />
                 <div className='d-grid'>
-                    <button className='btn btn-success'>CHECKOUT</button>
+                    <button onClick={handleCheckout} className='btn btn-success'>CHECKOUT</button>
                 </div>
                 </div>
             </div>
-        </div>
+        </div>:
+        <div className='text-center bg-white'>
+        <img style={{width:'50%',height:'500px'}} src="https://cdn.dribbble.com/users/2046015/screenshots/4591856/first_white_girl_drbl.gif" alt="" />
+        <h1 className='mt-3 text-black '>Your Cart is Empty</h1>
+        <Link className='btn btn-success mb-3' to={'/'}>Go to home and Purchase</Link>
+      </div>
+       }
     </div>
   )
 }
