@@ -4,7 +4,7 @@ import Badge from 'react-bootstrap/Badge';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { productSearch } from '../Redux/Slice/productSlice';
-function Header() {
+function Header({insideHome}) {
   const dispatch=useDispatch()
   const [wishlistCount,setWishlistCount]=useState(0)
   const [cartCount,setCartCount]=useState(0)
@@ -21,9 +21,9 @@ function Header() {
         <Link style={{textDecoration:'none',color:'white'}} to={'/'}><h4><i class="fa-solid fa-truck-fast"></i>&nbsp;E Cart</h4>
         </Link>
         </div>
-        <div>
+        {insideHome&&<div>
           <input onChange={e=>dispatch(productSearch(e.target.value.toLowerCase()))} style={{width:'400px'}} type="text" className='form-control bg-white fw-bold' placeholder='search products!' />
-        </div>
+        </div>}
         <div className='d-flex me-5 text-white'>
         <Link to={'/wishlist'}>
         <Button className='me-4 fw-bold ' variant="outline-light"><i class="fa-solid fa-heart text-danger "></i>&nbsp;WishList

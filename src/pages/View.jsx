@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { addToWishList } from '../Redux/Slice/wishlistSlice'
 import { addtoCart } from '../Redux/Slice/cartSlice'
+import Header from '../components/Header'
 
 function View() {
   const {id}=useParams()
@@ -24,6 +25,8 @@ function View() {
     }
   }
   return (
+    <>
+    <Header/>
     <div className='m-5 container'>
       {
     loading?<div className='text-center mt-5 '><Spinner animation="border" variant="warning" />
@@ -52,6 +55,7 @@ function View() {
       </div>
     }
     </div>
+    </>
   )
 }
 

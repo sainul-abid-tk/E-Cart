@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { Table } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
-import { emptyCart, removeCart } from '../Redux/Slice/cartSlice'
+import { deQuantity, emptyCart, inQuantity, removeCart } from '../Redux/Slice/cartSlice'
+import Header from '../components/Header'
 
 function Cart() {
     const dispatch=useDispatch()
@@ -23,9 +24,17 @@ function Cart() {
         dispatch(emptyCart())
         navigate('/')
     }
-
+    const decrement=(product)=>{
+        if(product.quantity==1){
+            dispatch(removeCart(product.id))
+        }
+        else{
+            dispatch(deQuantity(product))
+        }
+    }
   return (
     <div >
+        <Header/>
         {cart?.length>0?<div className="row m-5">
             <div className="col-lg-8">
                 <h3 className='mt-5'>Cart Summery</h3>
@@ -46,7 +55,13 @@ function Cart() {
                             <th>{index+1}</th>
                             <th>{product.title}</th>
                             <th><img style={{height:'100px',width:'100px'}} src={product.thumbnail} alt="" /></th>
-                            <th><input style={{width:'40px'}} type="text" className='form-control bg-white' value={product.quantity} readOnly /></th>
+                            <th>
+                               <div className='d-flex'>
+                                <button onClick={()=>decrement(product)} className='btn fw-bold'>-</button>
+                               <input style={{width:'40px'}} type="text" className='form-control bg-white' value={product.quantity} readOnly />
+                               <button onClick={()=>dispatch(inQuantity(product))} className='btn fw-bold '>+</button>
+                               </div>
+                            </th>
                             <th>$ {product.totalPrice}</th>
                             <th><button onClick={()=>dispatch(removeCart(product.id))} className='btn'><i className='fa-solid fa-trash text-danger'></i></button></th>
                         </tr>

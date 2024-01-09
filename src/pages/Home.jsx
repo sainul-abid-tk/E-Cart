@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import { fetchProducts } from '../Redux/Slice/productSlice'
 import { addToWishList } from '../Redux/Slice/wishlistSlice'
 import { addtoCart } from '../Redux/Slice/cartSlice'
-
+import Header from '../components/Header'
 function Home() {
   const dispatch=useDispatch()
   const {loading,products,error}=useSelector((state)=>state.productSlice)
@@ -24,12 +24,19 @@ function Home() {
   }
 
   return (
-    <div >
+    <>
+    <Header insideHome/>
+    <div style={{marginTop:'60px'}}>
+      {
+        !loading&&error ?<div className='mt-5 text-center text-danger fw-bold fs-2'>
+        Api call failed!!!
+        </div>:null
+      }
       {
         loading?<div className='text-center mt-5 '><Spinner animation="border" variant="warning" />
         </div>:
         <Row className='m-5 container '>
-        {products.length>0&&products.map((product,index)=>(
+        {products?.length>0?products.map((product,index)=>(
           <Col key={index} className='mb-5' sm={12} md={6} lg={4} xl={3}>
           <Card className='shadow rounded bg-white' style={{ width: '18rem' }}>
         <Link to={`/view/${product.id}`}><Card.Img style={{height:'180px'}} variant="top" src={product.thumbnail} />
@@ -43,11 +50,14 @@ function Home() {
         </Card.Body>
       </Card>
           </Col>
-        ))}
+        )):
+        !error&&<div className='mt-5 text-center text-danger fw-bold fs-2'>Products Not Found!!!</div>
+        }
       </Row>
       }
 
     </div>
+    </>
   )
 }
 

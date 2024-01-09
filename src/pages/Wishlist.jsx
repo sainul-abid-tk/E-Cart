@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { removeFromWishlist } from '../Redux/Slice/wishlistSlice'
 import { addtoCart } from '../Redux/Slice/cartSlice'
+import Header from '../components/Header'
 function Wishlist() {
   const dispatch=useDispatch()
   const wishlist=useSelector(state=>state.wishlistSlice.wishlist)
@@ -15,6 +16,7 @@ function Wishlist() {
 
   return (
     <div>
+      <Header/>
         <Row>
         {wishlist?.length>0?wishlist.map((product)=>(
          <Col  className='m-3' sm={12} md={6} lg={4} xl={3}>
